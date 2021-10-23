@@ -1,0 +1,10 @@
+build/
+node_modules/
+.env*
+*.DS_Store
+.nvmrc
+eth/deploy.sh
+yarn-error.log
+configs/
+.DS_Store
+abi.json
