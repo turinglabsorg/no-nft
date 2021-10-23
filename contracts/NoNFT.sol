@@ -16,7 +16,7 @@ contract NoNFT is ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
     bool public is_collection_revealed = false;
-    string public contract_base_uri = "https://ipfs.io/ipfs/";
+    string public contract_base_uri = "https://raw.githubusercontent.com/turinglabsorg/no-nft/master/metadata/nft.json";
     uint256 public mint_price = 0.01 ether;
     constructor(
         address _openseaProxyAddress,
@@ -36,13 +36,17 @@ contract NoNFT is ERC721, Ownable {
         return _tokenIdCounter.current();
     }
 
-    function tokenURI()
+    function tokenURI(uint256 _tokenId)
         public
         view
         override(ERC721)
         returns (string memory)
     {
-        return contract_base_uri;
+        if(_tokenId > 0){
+            return contract_base_uri;
+        }else{
+            return string(abi.encodePacked(""));
+        }
     }
 
     function contractURI() public view returns (string memory) {
