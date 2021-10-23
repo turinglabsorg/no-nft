@@ -1,0 +1,13 @@
+{
+    "description": "Nothing.",
+    "external_url": "https://github.com/turinglabsorg/no-nft",
+    "image": "https://github.com/turinglabsorg/no-nft/blob/master/metadata/nothing2.gif?raw=true",
+    "name": "Nothing",
+    "attributes": [
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "Useless Increase",
+            "value": 666
+        }
+    ]
+}
