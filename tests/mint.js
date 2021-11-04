@@ -1,9 +1,6 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const web3 = require("web3");
 require('dotenv').config()
-const MNEMONIC = process.env.GANACHE_MNEMONIC;
-const NFT_CONTRACT_ADDRESS = process.env.GANACHE_CONTRACT_ADDRESS;
-const OWNER_ADDRESS = process.env.GANACHE_OWNER_ADDRESS;
 const NFT_CONTRACT_ABI = require('../abi.json')
 const argv = require('minimist')(process.argv.slice(2));
 const fs = require('fs')
@@ -16,7 +13,6 @@ async function main(minter) {
             configs.provider
         );
         const web3Instance = new web3(provider);
-
         const nftContract = new web3Instance.eth.Contract(
             NFT_CONTRACT_ABI,
             configs.contract_address, { gasLimit: "5000000" }
@@ -32,7 +28,7 @@ async function main(minter) {
                 console.log('Trying minting NFT with nonce ' + nonce + '...')
                 const result = await nftContract.methods
                     .buyNFT()
-                    .send({ from: minter, nonce: nonce, value: web3Instance.utils.toWei("0.01","ether"), gasPrice: "100000000000" });
+                    .send({ from: minter, nonce: nonce, value: web3Instance.utils.toWei("0.01", "ether"), gasPrice: "100000000000" });
                 console.log("NFT minted! Transaction: " + result.transactionHash);
             } catch (e) {
                 console.log(e)
