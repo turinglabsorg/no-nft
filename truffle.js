@@ -12,7 +12,7 @@ module.exports = {
     networks: {
         ganache: {
             host: "localhost",
-            port: 7545,
+            port: 8545,
             gas: 5000000,
             gasPrice: 15000000000,
             network_id: "*", // Match any network id
