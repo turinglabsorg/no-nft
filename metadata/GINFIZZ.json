@@ -1,0 +1,57 @@
+{
+    "description": "The Gin Fizz is a classic cocktail from the Fizz family that emerged in the late 1800s. It features gin, fresh lemon juice, sugar, and carbonated water, creating a refreshing, frothy drink that became incredibly popular during the early 20th century. The drink is characterized by its signature fizzy texture and balanced sweet-sour profile.",
+    "external_url": "https://github.com/turinglabsorg/no-nft",
+    "image": "https://github.com/turinglabsorg/no-nft/blob/master/metadata/nothing2.gif?raw=true",
+    "animation_url": "https://ipfs.yomi.digital/ipfs/QmVEhhmAZFEEkcqzAtCXUoXw4LyxdAgRrpX4uJqWfXLBrx",
+    "name": "GINFIZZ",
+    "attributes": [
+        {
+            "trait_type": "Category",
+            "value": "Cocktail"
+        },
+        {
+            "trait_type": "Glass Type",
+            "value": "Collins Glass"
+        },
+        {
+            "trait_type": "Ingredient 1",
+            "value": "Gin",
+            "amount": "2 oz (60ml)"
+        },
+        {
+            "trait_type": "Ingredient 2",
+            "value": "Fresh Lemon Juice",
+            "amount": "1 oz (30ml)"
+        },
+        {
+            "trait_type": "Ingredient 3",
+            "value": "Simple Syrup",
+            "amount": "0.75 oz (22ml)"
+        },
+        {
+            "trait_type": "Ingredient 4",
+            "value": "Club Soda",
+            "amount": "2 oz (60ml)"
+        },
+        {
+            "trait_type": "Garnish",
+            "value": "Lemon wheel"
+        },
+        {
+            "trait_type": "Method",
+            "value": "Shake with ice, strain into glass, top with soda"
+        },
+        {
+            "trait_type": "Difficulty",
+            "value": "Medium"
+        },
+        {
+            "trait_type": "Year Created",
+            "value": 1888
+        },
+        {
+            "trait_type": "Origin",
+            "value": "New Orleans, USA"
+        }
+    ]
+}

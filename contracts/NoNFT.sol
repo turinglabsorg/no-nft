@@ -13,8 +13,9 @@ contract CocktailNft is ERC721, ERC721URIStorage, AccessControl {
         _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
         _grantRole(MINTER_ROLE, minter);
     }
-    // https://github.com/<USERNAME>/<REPO_NAME>/blob/<BRANCH>/<PATH>
-    string baseUri = "https://github.com/turinglabsorg/no-nft/blob/master/metadata/";
+
+    // https://raw.githubusercontent.com/<USERNAME>/<REPO_NAME>/refs/heads/<BRANCH>/<PATH>
+    string baseUri = "https://raw.githubusercontent.com/turinglabsorg/no-nft/refs/heads/master/metadata/";
     // 1 = AMERICANO
     // 2 = MOJITO
     // 3 = MANHATTAN
@@ -35,17 +36,14 @@ contract CocktailNft is ERC721, ERC721URIStorage, AccessControl {
     // https://docs.opensea.io/docs/metadata-standards <- This is the standard for NFT metadata
     //For OpenSea to pull in off-chain metadata for ERC721 and ERC1155 assets, your contract will need to return a URI where we can find the metadata. 
     // To find this URI, we use the tokenURI method in ERC721 and the uri method in ERC1155.
-    // https://cocktailnft.com/AMERICANO.json
-    // https://cocktailnft.com/MOJITO.json
-    // https://cocktailnft.com/MANHATTAN.json
-    // https://cocktailnft.com/OLD FASHION.json
-    // https://cocktailnft.com/GIN FIZZ.json
     function tokenURI(uint256 tokenId)
         public
         view
         override(ERC721, ERC721URIStorage)
         returns (string memory)
     {
+        // baseURI                                                                                 cocktails[tokenId]      .json
+        // https://raw.githubusercontent.com/turinglabsorg/no-nft/refs/heads/master/metadata/      AMERICANO               .json
         return string.concat(baseUri, cocktails[tokenId], ".json");
     }
 
