@@ -1,119 +1,60 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.6;
+// Compatible with OpenZeppelin Contracts ^5.0.0
+pragma solidity ^0.8.22;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
+import {AccessControl} from "@openzeppelin/contracts@5.1.0/access/AccessControl.sol";
+import {ERC721} from "@openzeppelin/contracts@5.1.0/token/ERC721/ERC721.sol";
+import {ERC721URIStorage} from "@openzeppelin/contracts@5.1.0/token/ERC721/extensions/ERC721URIStorage.sol";
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+contract CocktailNft is ERC721, ERC721URIStorage, AccessControl {
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-/**
- * @title NoNFT
- * NoNFT - ERC-721 NoNFT
- */
-contract NoNFT is ERC721, Ownable {
-    address openseaProxyAddress;
-    string public contract_ipfs_json;
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIdCounter;
-    bool public is_collection_revealed = false;
-    string public contract_base_uri = "https://raw.githubusercontent.com/turinglabsorg/no-nft/master/metadata/nft.json";
-    uint256 public mint_price = 0.01 ether;
-    constructor(
-        address _openseaProxyAddress,
-        string memory _name,
-        string memory _ticker,
-        string memory _contract_ipfs
-    ) ERC721(_name, _ticker) {
-        openseaProxyAddress = _openseaProxyAddress;
-        contract_ipfs_json = _contract_ipfs;
+    constructor(address defaultAdmin, address minter) ERC721("CocktailNft", "CNFT") {
+        _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
+        _grantRole(MINTER_ROLE, minter);
+    }
+    // https://github.com/<USERNAME>/<REPO_NAME>/blob/<BRANCH>/<PATH>
+    string baseUri = "https://github.com/turinglabsorg/no-nft/blob/master/metadata/";
+    // 1 = AMERICANO
+    // 2 = MOJITO
+    // 3 = MANHATTAN
+    // 4 = OLD FASHION
+    // 5 = GIN FIZZ
+
+    string[] public cocktails = ["AMERICANO", "MOJITO", "MANHATTAN", "OLD FASHION", "GIN FIZZ"];
+
+    function safeMint(address to, uint256 tokenId, string memory cocktail)
+        public
+        onlyRole(MINTER_ROLE)
+    {
+        _safeMint(to, tokenId);
+        _setTokenURI(tokenId, cocktails[cocktail]);
     }
 
-    function _baseURI() internal view override returns (string memory) {
-        return contract_base_uri;
-    }
-
-    function totalSupply() public view returns (uint256) {
-        return _tokenIdCounter.current();
-    }
-
-    function tokenURI(uint256 _tokenId)
+    // The following functions are overrides required by Solidity.
+    // https://docs.opensea.io/docs/metadata-standards <- This is the standard for NFT metadata
+    //For OpenSea to pull in off-chain metadata for ERC721 and ERC1155 assets, your contract will need to return a URI where we can find the metadata. 
+    // To find this URI, we use the tokenURI method in ERC721 and the uri method in ERC1155.
+    // https://cocktailnft.com/AMERICANO.json
+    // https://cocktailnft.com/MOJITO.json
+    // https://cocktailnft.com/MANHATTAN.json
+    // https://cocktailnft.com/OLD FASHION.json
+    // https://cocktailnft.com/GIN FIZZ.json
+    function tokenURI(uint256 tokenId)
         public
         view
-        override(ERC721)
+        override(ERC721, ERC721URIStorage)
         returns (string memory)
     {
-        if(_tokenId > 0){
-            return contract_base_uri;
-        }else{
-            return string(abi.encodePacked(""));
-        }
+        return string.concat(baseUri, cocktails[tokenId], ".json");
     }
 
-    function contractURI() public view returns (string memory) {
-        return contract_ipfs_json;
-    }
-
-    function fixContractURI(string memory _newURI) public onlyOwner {
-        contract_ipfs_json = _newURI;
-    }
-
-    function fixBaseURI(string memory _newURI) public onlyOwner {
-        contract_base_uri = _newURI;
-    }
-
-    /*
-        This method will allow anyone to mint the token.
-    */
-    function buyNFT()
-        public
-        payable
-    {
-        require(msg.value % mint_price == 0, 'NoNFT, Amount must be a multiple of price');
-        uint256 amount = msg.value / mint_price;
-        require(amount >= 1, 'NoNFT: Amount should be at least 1');
-        uint j = 0;
-        for (j = 0; j < amount; j++) {
-            _tokenIdCounter.increment();
-            uint256 newTokenId = _tokenIdCounter.current();
-            _mint(msg.sender, newTokenId);
-        }
-    }
-
-    /*
-        This method will allow owner to get the balance of the smart contract
-     */
-
-    function getBalance() public view returns (uint256) {
-        return address(this).balance;
-    }
-
-    /*
-        This method will allow owner tow withdraw all ethers
-     */
-
-    function withdrawMatic() public onlyOwner {
-        uint256 balance = address(this).balance;
-        require(balance > 0, 'NoNFT: Nothing to withdraw!');
-        payable(msg.sender).transfer(balance);
-    }
-
-    /**
-     * Override isApprovedForAll to whitelist proxy accounts
-     */
-    function isApprovedForAll(address _owner, address _operator)
+    function supportsInterface(bytes4 interfaceId)
         public
         view
-        override
-        returns (bool isOperator)
+        override(ERC721, ERC721URIStorage, AccessControl)
+        returns (bool)
     {
-
-        // Approving for UMi and Opensea address
-        if (_operator == address(openseaProxyAddress)) {
-            return true;
-        }
-
-        return super.isApprovedForAll(_owner, _operator);
+        return super.supportsInterface(interfaceId);
     }
 }
