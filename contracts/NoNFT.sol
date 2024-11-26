@@ -23,8 +23,8 @@ contract CocktailNft is ERC721, ERC721URIStorage, AccessControl {
     // 4 = OLDFASHION
     // 5 = GINFIZZ
 
-    string[] public cocktails = ["AMERICANO", "MOJITO", "MANHATTAN", "OLDFASHION", "GINFIZZ"];
-    
+    mapping(uint256 => string) cocktails;
+
     // Website will call the safeMint by providing
     // to: user's address
     // cocktail: cocktail name
@@ -37,11 +37,11 @@ contract CocktailNft is ERC721, ERC721URIStorage, AccessControl {
         public
         onlyRole(MINTER_ROLE)
     {
-        require(keccak256(abi.encodePacked(cocktail)) == keccak256(abi.encodePacked(cocktails[cocktail])), "Invalid cocktail");
         require(tokenIds < limit, "Limit reached");
         tokenIds++;
+        cocktails[tokenIds] = cocktail;
         _safeMint(to, tokenIds);
-        _setTokenURI(tokenIds, cocktails[cocktail]);
+        _setTokenURI(tokenIds, cocktail);
     }
 
     // What opensea will do is call the tokenURI method to get the metadata
