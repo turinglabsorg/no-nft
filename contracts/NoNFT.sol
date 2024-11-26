@@ -20,21 +20,25 @@ contract CocktailNft is ERC721, ERC721URIStorage, AccessControl {
     // 1 = AMERICANO
     // 2 = MOJITO
     // 3 = MANHATTAN
-    // 4 = OLD FASHION
-    // 5 = GIN FIZZ
+    // 4 = OLDFASHION
+    // 5 = GINFIZZ
 
-    string[] public cocktails = ["AMERICANO", "MOJITO", "MANHATTAN", "OLD FASHION", "GIN FIZZ"];
+    string[] public cocktails = ["AMERICANO", "MOJITO", "MANHATTAN", "OLDFASHION", "GINFIZZ"];
     
     // Website will call the safeMint by providing
     // to: user's address
     // cocktail: cocktail name
     // The user will receive the NFT with the next tokenId
     // TokenId will be linked to the cocktail name
+
+    uint256 public limit = 10000;
+
     function safeMint(address to, string memory cocktail)
         public
         onlyRole(MINTER_ROLE)
     {
         require(keccak256(abi.encodePacked(cocktail)) == keccak256(abi.encodePacked(cocktails[cocktail])), "Invalid cocktail");
+        require(tokenIds < limit, "Limit reached");
         tokenIds++;
         _safeMint(to, tokenIds);
         _setTokenURI(tokenIds, cocktails[cocktail]);
@@ -42,7 +46,7 @@ contract CocktailNft is ERC721, ERC721URIStorage, AccessControl {
 
     // What opensea will do is call the tokenURI method to get the metadata
     // https://docs.opensea.io/docs/metadata-standards <- This is the standard for NFT metadata
-    //For OpenSea to pull in off-chain metadata for ERC721 and ERC1155 assets, your contract will need to return a URI where we can find the metadata. 
+    // For OpenSea to pull in off-chain metadata for ERC721 and ERC1155 assets, your contract will need to return a URI where we can find the metadata. 
     // To find this URI, we use the tokenURI method in ERC721 and the uri method in ERC1155.
     function tokenURI(uint256 tokenId)
         public
