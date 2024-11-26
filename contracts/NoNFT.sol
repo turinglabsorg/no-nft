@@ -13,6 +13,7 @@ contract CocktailNft is ERC721, ERC721URIStorage, AccessControl {
         _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
         _grantRole(MINTER_ROLE, minter);
     }
+    uint256 public tokenIds = 0;
 
     // https://raw.githubusercontent.com/<USERNAME>/<REPO_NAME>/refs/heads/<BRANCH>/<PATH>
     string baseUri = "https://raw.githubusercontent.com/turinglabsorg/no-nft/refs/heads/master/metadata/";
@@ -24,12 +25,13 @@ contract CocktailNft is ERC721, ERC721URIStorage, AccessControl {
 
     string[] public cocktails = ["AMERICANO", "MOJITO", "MANHATTAN", "OLD FASHION", "GIN FIZZ"];
 
-    function safeMint(address to, uint256 tokenId, string memory cocktail)
+    function safeMint(address to, string memory cocktail)
         public
         onlyRole(MINTER_ROLE)
     {
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, cocktails[cocktail]);
+        tokenIds++;
+        _safeMint(to, tokenIds);
+        _setTokenURI(tokenIds, cocktails[cocktail]);
     }
 
     // The following functions are overrides required by Solidity.
